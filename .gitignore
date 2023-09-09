@@ -1,0 +1,33 @@
+# 编译输出文件和目录
+/dist/
+/build/
+/out/
+
+# 依赖目录
+/node_modules/
+
+# 缓存和临时文件
+/.cache/
+/.tmp/
+/.DS_Store
+
+# IDE 和编辑器文件
+/.idea/
+/.vscode/
+/.project
+/.classpath
+/.settings/
+
+# 日志文件
+/*.log
+
+# 测试和调试文件
+/coverage/
+/.env
+
+# 其他自动生成的文件
+*.swp
+*.swo
+*.bak
+*.tmp
+*.orig
