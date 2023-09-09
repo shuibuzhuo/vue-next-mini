@@ -7,5 +7,21 @@
 </head>
 <body>
   <h1>运行时</h1>
+
+  <div id="app"></div>
+
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.47/vue.global.js"></script>
+  <script>
+    const { render, h } = Vue
+
+    // 生成 VNode
+    const vnode = h('div', { class: 'test' }, 'hello render 2')
+
+    // 承载的容器
+    const container = document.querySelector('#app')
+
+    // 渲染函数
+    render(vnode, container)
+  </script>
 </body>
 </html>
