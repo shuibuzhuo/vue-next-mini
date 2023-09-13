@@ -1,0 +1,34 @@
+{
+  // 编译器配置
+  "compilerOptions": {
+    // 根目录
+    "rootDir": ".",
+    // 严格模式标志
+    "strict": true,
+    // 指定类型脚本如何从给定的模块说明符查找文件
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    // JS 语言版本
+    "target": "ES5",
+    // 允许未读取局部变量
+    "noUnusedLocals": false,
+    // 允许未读取的参数
+    "noUnusedParameters": false,
+    // 允许解析 json
+    "resolveJsonModule": true,
+    // 支持语法迭代
+    "downlevelIteration": true,
+    // 允许使用隐式的 any
+    "noImplicitAny": false,
+    // 模块化
+    "module": "ESNext",
+    // 转换未 JavaScript 时从 TypeScript 文件中删除所有注释
+    "removeComments": false,
+    // 禁用 sourceMap
+    "sourceMap": false,
+    "lib": ["ESNext", "DOM"]
+  },
+  "include": [
+    "packages/*/src"
+  ]
+}
