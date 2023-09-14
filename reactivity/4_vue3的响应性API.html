@@ -1,0 +1,52 @@
+<script>
+  // 定义一个商品对象，包含价格和数量
+  let product = {
+    price: 10,
+    quantity: 2,
+  };
+
+  // proxyProduct 代理对象，拥有被代理对象的所有属性(只有代理对象，才会触发 getter 和 setter)
+  // product 被代理对象
+  const proxyProduct = new Proxy(product, {
+    /**
+     * 监听 proxyProduct 的 set 方法，在 proxyProduct.xx = xx 时，被触发
+     * @params target 被代理对象
+     * @params key 指定的属性名
+     * @params newVal 新值
+     * @params receiver 一般来说就是代理对象
+     * @returns 为一个 boolean 类型，true 表示属性设置成功
+     */
+    set(target, key, newVal, receiver) {
+      // 给 target 赋新的值
+      target[key] = newVal;
+
+      // 触发 effect，重新计算总价
+      effect();
+
+      // true 表示属性设置成功
+      return true;
+    },
+
+    /**
+     * 监听 proxyProduct 的 get 方法，在 proxyProduct.xx 时，被触发
+     * @params target 被代理对象
+     * @params key 指定的属性名
+     * @params receiver 一般来说就是代理对象
+     * @returns proxyProduct.xx 的结果
+     */
+    get(target, key, receiver) {
+      return target[key];
+    },
+  });
+
+  // 总价格
+  let total = 0;
+  // 计算总价格的函数
+  function effect() {
+    // 要用代理对象 proxyProduct.price proxyProduct.quantity，因为只有代理对象，才会触发 getter 和 setter
+    total = proxyProduct.price * proxyProduct.quantity;
+  }
+
+  effect();
+  console.log(`总价格：${total}`);
+</script>

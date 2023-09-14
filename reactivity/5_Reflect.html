@@ -1,0 +1,59 @@
+<script>
+  // const obj = {
+  //   name: "shuibuzhuo",
+  // };
+
+  // console.log(obj.name);
+  // console.log(Reflect.get(obj, "name"));
+
+  // const p1 = {
+  //   lastName: "张",
+  //   firstName: "三",
+  //   get fullName() {
+  //     return this.lastName + this.firstName;
+  //   },
+  // };
+
+  // const p2 = {
+  //   lastName: "李",
+  //   firstName: "四",
+  // };
+
+  // console.log(p1.fullName); // 张三
+  // console.log(Reflect.get(p1, "fullName")); // 张三
+  // console.log(Reflect.get(p1, "fullName", p2)); // 李四
+
+  // const p1 = {
+  //   lastName: "张",
+  //   firstName: "三",
+  //   get fullName() {
+  //     return this.lastName + this.firstName;
+  //   },
+  // };
+
+  // const proxy = new Proxy(p1, {
+  //   get(target, key, receiver) {
+  //     console.log("触发了 getter");
+  //     return target[key];
+  //   },
+  // });
+
+  // console.log(proxy.fullName);
+
+  const p1 = {
+    lastName: "张",
+    firstName: "三",
+    get fullName() {
+      return this.lastName + this.firstName;
+    },
+  };
+
+  const proxy = new Proxy(p1, {
+    get(target, key, receiver) {
+      console.log("触发了 getter");
+      return Reflect.get(target, key, receiver);
+    },
+  });
+
+  console.log(proxy.fullName);
+</script>
