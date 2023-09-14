@@ -26,9 +26,12 @@
     "removeComments": false,
     // 禁用 sourceMap
     "sourceMap": false,
-    "lib": ["ESNext", "DOM"]
+    "lib": ["ESNext", "DOM"],
+    // 设置快捷导入
+    "baseUrl": ".",
+    "paths": {
+      "@vue/*": ["packages/*/src"]
+    }
   },
-  "include": [
-    "packages/*/src"
-  ]
+  "include": ["packages/*/src"]
 }

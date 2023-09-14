@@ -1,0 +1,19 @@
+<script>
+  // 定义一个商品对象，包含价格和数量
+  const product = {
+    price: 10,
+    quantity: 2,
+  };
+
+  // 总价格
+  let total = product.price * product.quantity;
+
+  // 第一次打印
+  console.log(`总价格：${total}`); // 20
+
+  // 修改商品数量
+  product.quantity = 5;
+
+  // 第二次打印
+  console.log(`总价格：${total}`); // 20
+</script>
