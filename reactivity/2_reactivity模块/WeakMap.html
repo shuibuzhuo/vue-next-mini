@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WeakMap</title>
+  </head>
+  <body>
+    <script>
+      let obj = {
+        name: "shuibuzhuo",
+      };
+
+      const map = new Map();
+
+      map.set(obj, 100);
+
+      obj = null;
+
+      let obj2 = {
+        name: "shuibuzhuo2",
+      };
+
+      const wmap = new WeakMap();
+
+      wmap.set(obj2, 100);
+
+      obj2 = null;
+    </script>
+  </body>
+</html>
