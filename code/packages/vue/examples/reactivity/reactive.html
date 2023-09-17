@@ -16,11 +16,13 @@
       name: 'shuibuzhuo'
     })
 
-    console.log(obj.name)
-
     effect(() => {
       document.getElementById('app').innerText = obj.name
     })
+
+    setTimeout(() => {
+      obj.name = 'zhangsan'
+    }, 2000)
   </script>
 </body>
 </html>
