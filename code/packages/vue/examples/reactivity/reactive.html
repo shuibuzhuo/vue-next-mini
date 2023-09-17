@@ -7,8 +7,10 @@
   <script src="../../dist/vue.js"></script>
 </head>
 <body>
+  <div id="app"></div>
+
   <script>
-    const { reactive } = Vue
+    const { reactive, effect } = Vue
 
     const obj = reactive({
       name: 'shuibuzhuo'
@@ -16,9 +18,9 @@
 
     console.log(obj.name)
 
-    setTimeout(() => {
-      obj.name = 'zhangsan'
-    }, 3000)
+    effect(() => {
+      document.getElementById('app').innerText = obj.name
+    })
   </script>
 </body>
 </html>

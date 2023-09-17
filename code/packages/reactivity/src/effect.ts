@@ -1,10 +1,26 @@
+export function effect<T = any>(fn: () => T) {
+  const _effect = new ReactiveEffect(fn)
+
+  _effect.run()
+}
+
+export let activeEffect: ReactiveEffect | undefined
+
+export class ReactiveEffect<T = any> {
+  constructor(public fn: () => T) {}
+
+  run() {
+    activeEffect = this
+
+    return this.fn()
+  }
+}
+
 export function track(target: object, key: unknown) {
-  console.log('track: 收集依赖'); 
-  console.log('watch2');
-  
+  console.log('track: 收集依赖')
+  console.log('watch2')
 }
 
 export function trigger(target: object, key: unknown, newValue: unknown) {
-  console.log('trigger：触发依赖');
-  
+  console.log('trigger：触发依赖')
 }
