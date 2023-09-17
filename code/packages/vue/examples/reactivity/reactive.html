@@ -14,7 +14,11 @@
       name: 'shuibuzhuo'
     })
 
-    console.log(obj)
+    console.log(obj.name)
+
+    setTimeout(() => {
+      obj.name = 'zhangsan'
+    }, 3000)
   </script>
 </body>
 </html>
