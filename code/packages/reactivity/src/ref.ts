@@ -1,5 +1,6 @@
+import { hasChanged } from '@vue/shared'
 import { Dep, createDep } from './dep'
-import { activeEffect, trackEffects } from './effect'
+import { activeEffect, trackEffects, triggerEffects } from './effect'
 import { toReactive } from './reactive'
 
 export interface Ref<T = any> {
@@ -23,12 +24,15 @@ function createRef(rawValue: unknown, shallow: boolean) {
 
 class RefImpl<T> {
   private _value: T
+  /** 原始数据 */
+  private _rawValue: T
 
   public dep?: Dep = undefined
 
   public readonly __v_isRef = true
 
   constructor(value: T, public readonly __v_isShallow: boolean) {
+    this._rawValue = value
     this._value = __v_isShallow ? value : toReactive(value)
   }
 
@@ -37,11 +41,29 @@ class RefImpl<T> {
     return this._value
   }
 
-  set value(newVal) {}
+  set value(newVal) {
+    if (hasChanged(newVal, this._rawValue)) {
+      this._rawValue = newVal
+      this._value = toReactive(newVal)
+      triggerRefValue(this)
+    }
+  }
 }
 
+/**
+ * 收集依赖
+ */
 export function trackRefValue(ref) {
   if (activeEffect) {
     trackEffects(ref.dep || (ref.dep = createDep()))
+  }
+}
+
+/**
+ * 触发依赖
+ */
+export function triggerRefValue(ref) {
+  if (ref.dep) {
+    triggerEffects(ref.dep)
   }
 }
