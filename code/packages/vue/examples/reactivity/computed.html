@@ -17,10 +17,12 @@
       })
 
       const computedObj = computed(() => {
+        console.log('计算属性计算了')
         return '姓名' + obj.name
       })
 
       effect(() => {
+        document.getElementById('app').innerText = computedObj.value
         document.getElementById('app').innerText = computedObj.value
       })
 

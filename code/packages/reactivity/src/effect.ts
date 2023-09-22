@@ -67,7 +67,15 @@ export function triggerEffects(dep: Dep) {
   const effects = isArray(dep) ? dep : [...dep]
 
   for (const effect of effects) {
-    triggerEffect(effect)
+    if (effect.computed) {
+      triggerEffect(effect)
+    }
+  }
+
+  for (const effect of effects) {
+    if (!effect.computed) {
+      triggerEffect(effect)
+    }
   }
 }
 
