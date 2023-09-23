@@ -20,3 +20,6 @@ export const hasChanged = (value: any, oldValue: any) =>
  */
 export const isFunction = (val: unknown): val is Function =>
   typeof val === 'function'
+
+/** 合并对象属性 */
+export const extend = Object.assign
