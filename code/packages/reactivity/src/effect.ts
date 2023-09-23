@@ -1,4 +1,4 @@
-import { isArray } from '@vue/shared'
+import { extend, isArray } from '@vue/shared'
 import { Dep, createDep } from './dep'
 import { ComputedRefImpl } from './computed'
 
@@ -14,6 +14,10 @@ const targetMap = new WeakMap<any, KeyToDepMap>()
 
 export function effect<T = any>(fn: () => T, options?: ReactiveEffectOptions) {
   const _effect = new ReactiveEffect(fn)
+
+  if (options) {
+    extend(_effect, options)
+  }
 
   if (!options || !options.lazy) {
     _effect.run()
