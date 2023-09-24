@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script>
+    const vnode = {
+      type: 'div',
+      children: 'hello render'
+    }
+
+    function render(oldVNode, newVNode, container) {
+      if (!oldVNode) {
+        mount(newVNode, container)
+      }
+    }
+
+    function mount(vnode, container) {
+      const ele = document.createElement(vnode.type)
+      ele.innerText = vnode.children
+      container.appendChild(ele)
+    }
+
+    render(null, vnode, document.querySelector('#app'))
+  </script>
+</body>
+</html>
