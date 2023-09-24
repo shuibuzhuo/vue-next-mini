@@ -3,6 +3,10 @@ import { mutableHandlers } from './baseHandlers'
 
 export const reactiveMap = new WeakMap<object, any>()
 
+export const enum ReactiveFlags {
+  IS_REACTIVE = '__v_isReactive'
+}
+
 export function reactive(target: object) {
   return createReactiveObject(target, mutableHandlers, reactiveMap)
 }
@@ -19,6 +23,7 @@ function createReactiveObject(
   }
 
   const proxy = new Proxy(target, baseHandlers)
+  proxy[ReactiveFlags.IS_REACTIVE] = true
 
   proxyMap.set(target, proxy)
 
@@ -27,3 +32,7 @@ function createReactiveObject(
 
 export const toReactive = <T extends unknown>(value: T): T =>
   isObject(value) ? reactive(value as object) : value
+
+  export const isReactive = (value: unknown): boolean => {
+    return !!(value && value[ReactiveFlags.IS_REACTIVE])
+  }

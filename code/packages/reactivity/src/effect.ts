@@ -39,6 +39,8 @@ export class ReactiveEffect<T = any> {
 
     return this.fn()
   }
+  
+  stop() {}
 }
 
 export function track(target: object, key: unknown) {
