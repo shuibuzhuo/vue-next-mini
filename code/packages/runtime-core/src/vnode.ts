@@ -39,6 +39,7 @@ function normalizeChildren(vnode, children) {
   if (children == null) {
     children = null
   } else if (isArray(children)) {
+    type = ShapeFlags.ARRAY_CHILDREN
   } else if (typeof children === 'object') {
   } else if (isFunction(children)) {
   } else {
