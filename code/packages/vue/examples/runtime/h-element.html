@@ -7,6 +7,18 @@
     <script src="../../dist/vue.js"></script>
   </head>
   <body>
-    <h1>Hello vue-next-mini</h1>
+    <script>
+      const { h } = Vue
+
+      const vnode = h(
+        'div',
+        {
+          class: 'test'
+        },
+        'hello render'
+      )
+
+      console.log(vnode)
+    </script>
   </body>
 </html>

@@ -19,10 +19,10 @@
       effect(
         () => {
           console.log(obj.count)
+        },
+        {
+          lazy: true
         }
-        // {
-        //   lazy: true
-        // }
       )
 
       obj.count = 2
