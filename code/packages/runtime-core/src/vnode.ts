@@ -1,4 +1,4 @@
-import { isArray, isFunction, isString } from '@vue/shared'
+import { isArray, isFunction, isObject, isString } from '@vue/shared'
 import { ShapeFlags } from 'packages/shared/src/shapeFlags'
 
 export interface VNode {
@@ -14,7 +14,11 @@ export const isVNode = (value: any): value is VNode => {
 }
 
 export function createVNode(type, props, children): VNode {
-  const shapeFlag = isString(type) ? ShapeFlags.ELEMENT : 0
+  const shapeFlag = isString(type)
+    ? ShapeFlags.ELEMENT
+    : isObject(type)
+    ? ShapeFlags.STATEFUL_COMPONENT
+    : 0
 
   return createBaseVNode(type, props, children, shapeFlag)
 }
