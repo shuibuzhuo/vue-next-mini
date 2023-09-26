@@ -9,6 +9,10 @@ export interface VNode {
   shapeFlag: number
 }
 
+export const Text = Symbol('Text')
+export const Comment = Symbol('Comment')
+export const Fragment = Symbol('Fragment')
+
 export const isVNode = (value: any): value is VNode => {
   return value ? value.__v_isVNode === true : false
 }
