@@ -1,4 +1,5 @@
 import { isArray, isFunction, isObject, isString } from '@vue/shared'
+import { normalizeClass } from 'packages/shared/src/normalizedProp'
 import { ShapeFlags } from 'packages/shared/src/shapeFlags'
 
 export interface VNode {
@@ -23,6 +24,14 @@ export function createVNode(type, props, children): VNode {
     : isObject(type)
     ? ShapeFlags.STATEFUL_COMPONENT
     : 0
+
+  if (props) {
+    const { class: klass, style } = props
+
+    if (klass && !isString(klass)) {
+      props.class = normalizeClass(klass)
+    }
+  }
 
   return createBaseVNode(type, props, children, shapeFlag)
 }
