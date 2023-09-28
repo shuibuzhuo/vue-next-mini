@@ -31,3 +31,9 @@ export const extend = Object.assign
 
 /** 定义一个常量，是个空对象 */
 export const EMPTY_OBJ: { readonly [key: string]: any } = {}
+
+/** onXxx 的正则 */
+export const onRE = /^on[^a-z]/
+
+/** 判断是不是 onXxx */
+export const isOn = (val: string) => onRE.test(val)
