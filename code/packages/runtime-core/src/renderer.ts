@@ -4,7 +4,7 @@ import { ShapeFlags } from 'packages/shared/src/shapeFlags'
 export interface RendererOptions {
   setElementText: (el: Element, text: string) => void
   insert: (el: Element, parent: Element, anchor?) => void
-  createElement: (type: string) => void
+  createElement: (type: string) => Element
   patchProp: (el: Element, key: string, prevValue: any, nextValue: any) => void
 }
 
@@ -13,12 +13,32 @@ export function createRenderer(options: RendererOptions) {
 }
 
 function baseCreateRenderer(options: RendererOptions) {
-  const {
-    setElementText: hostSetElementText,
-    insert: hostInsert,
-    createElement: setCreateElement,
-    patchProp: hostPatchProp
-  } = options
+  const { createElement: hostCreateElement, setElementText: hostSetElementText, patchProp: hostPatchProp, insert: hostInsert} = options
+
+  const processElement = (oldVNode, newVNode, container, anchor) => {
+    if (oldVNode == null) {
+      mountElement(newVNode, container, anchor)
+    } else {
+      // TODO 更新操作
+    }
+  }
+
+  const mountElement = (vnode, container, anchor) => {
+    const { type, shapeFlag, props } = vnode
+    const el = vnode.el = hostCreateElement(type)
+
+    if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
+      hostSetElementText(el, vnode.children)
+    } else if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {}
+
+    if (props) {
+      for (const key in props) {
+        hostPatchProp(el, key, null, props[key])
+      }
+    }
+
+    hostInsert(el, container, anchor)
+  }
 
   const patch = (oldVNode, newVNode, container, anchor = null) => {
     if (oldVNode === newVNode) {
@@ -37,6 +57,7 @@ function baseCreateRenderer(options: RendererOptions) {
       default:
         if (shapeFlag & ShapeFlags.ELEMENT) {
           // TODO Element
+          processElement(oldVNode, newVNode, container, anchor)
         } else if (shapeFlag & ShapeFlags.COMPONENT) {
           // TODO Component
         }
