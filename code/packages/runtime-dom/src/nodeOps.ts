@@ -13,5 +13,12 @@ export const nodeOps = {
 
   insert(child: Element, parent: Element, anchor?) {
     parent.insertBefore(child, anchor || null)
+  },
+
+  remove(child: Element) {
+    const parent = child.parentNode
+    if (parent) {
+      parent.removeChild(child)
+    }
   }
 }

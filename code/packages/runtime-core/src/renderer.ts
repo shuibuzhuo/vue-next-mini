@@ -1,12 +1,14 @@
 import { Comment, Fragment, Text } from '@vue/runtime-core'
 import { EMPTY_OBJ } from '@vue/shared'
 import { ShapeFlags } from 'packages/shared/src/shapeFlags'
+import { VNode, isSameVNodeType } from './vnode'
 
 export interface RendererOptions {
   setElementText: (el: Element, text: string) => void
   insert: (el: Element, parent: Element, anchor?) => void
   createElement: (type: string) => Element
   patchProp: (el: Element, key: string, prevValue: any, nextValue: any) => void
+  remove: (el: Element) => void
 }
 
 export function createRenderer(options: RendererOptions) {
@@ -14,7 +16,13 @@ export function createRenderer(options: RendererOptions) {
 }
 
 function baseCreateRenderer(options: RendererOptions) {
-  const { createElement: hostCreateElement, setElementText: hostSetElementText, patchProp: hostPatchProp, insert: hostInsert} = options
+  const {
+    createElement: hostCreateElement,
+    setElementText: hostSetElementText,
+    patchProp: hostPatchProp,
+    insert: hostInsert,
+    remove: hostRemove
+  } = options
 
   const patchElement = (newVNode, oldVNode) => {
     const el = (newVNode.el = oldVNode.el)
@@ -91,11 +99,12 @@ function baseCreateRenderer(options: RendererOptions) {
 
   const mountElement = (vnode, container, anchor) => {
     const { type, shapeFlag, props } = vnode
-    const el = vnode.el = hostCreateElement(type)
+    const el = (vnode.el = hostCreateElement(type))
 
     if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
       hostSetElementText(el, vnode.children)
-    } else if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {}
+    } else if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
+    }
 
     if (props) {
       for (const key in props) {
@@ -109,6 +118,11 @@ function baseCreateRenderer(options: RendererOptions) {
   const patch = (oldVNode, newVNode, container, anchor = null) => {
     if (oldVNode === newVNode) {
       return
+    }
+
+    if (oldVNode && !isSameVNodeType(oldVNode, newVNode)) {
+      unmount(oldVNode)
+      oldVNode = null
     }
 
     const { type, shapeFlag } = newVNode
@@ -128,6 +142,10 @@ function baseCreateRenderer(options: RendererOptions) {
           // TODO Component
         }
     }
+  }
+
+  const unmount = (vnode) => {
+    hostRemove(vnode.el)
   }
 
   const render = (vnode, container) => {
