@@ -9,6 +9,9 @@ export interface RendererOptions {
   createElement: (type: string) => Element
   patchProp: (el: Element, key: string, prevValue: any, nextValue: any) => void
   remove: (el: Element) => void
+  createText: (text: string) => void
+  createComment: (text: string) => void
+  setText: (el: Element, text: string) => void
 }
 
 export function createRenderer(options: RendererOptions) {
@@ -21,7 +24,10 @@ function baseCreateRenderer(options: RendererOptions) {
     setElementText: hostSetElementText,
     patchProp: hostPatchProp,
     insert: hostInsert,
-    remove: hostRemove
+    remove: hostRemove,
+    createText: hostCreateText,
+    setText: hostSetText,
+    createComment: hostCreateComment
   } = options
 
   const patchElement = (newVNode, oldVNode) => {
@@ -87,6 +93,29 @@ function baseCreateRenderer(options: RendererOptions) {
     }
   }
 
+  const processComment = (oldVNode, newVNode, container, anchor) => {
+    if (oldVNode == null) {
+      newVNode.el = hostCreateComment(newVNode.children)
+      hostInsert(newVNode.el, container, anchor)
+    } else {
+      newVNode.el = oldVNode.el
+    }
+  }
+
+  const processText = (oldVNode, newVNode, container, anchor) => {
+    if (oldVNode == null) {
+      // 挂载
+      newVNode.el = hostCreateText(newVNode.children)
+      hostInsert(newVNode.el, container, anchor)
+    } else {
+      // 更新
+      const el = (newVNode.el = oldVNode.el!)
+      if (newVNode.children !== oldVNode.children) {
+        hostSetText(el, newVNode.children)
+      }
+    }
+  } 
+
   const processElement = (oldVNode, newVNode, container, anchor) => {
     if (oldVNode == null) {
       // 挂载操作
@@ -129,8 +158,10 @@ function baseCreateRenderer(options: RendererOptions) {
 
     switch (type) {
       case Text:
+        processText(oldVNode, newVNode, container, anchor)
         break
       case Comment:
+        processComment(oldVNode, newVNode, container, anchor)
         break
       case Fragment:
         break
