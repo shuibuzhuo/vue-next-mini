@@ -1,7 +1,8 @@
 import { Comment, Fragment, Text } from '@vue/runtime-core'
-import { EMPTY_OBJ } from '@vue/shared'
+import { EMPTY_OBJ, isString } from '@vue/shared'
 import { ShapeFlags } from 'packages/shared/src/shapeFlags'
-import { VNode, isSameVNodeType } from './vnode'
+import { VNode, createVNode, isSameVNodeType } from './vnode'
+import { normalizeVNode } from './componentRenderUtils'
 
 export interface RendererOptions {
   setElementText: (el: Element, text: string) => void
@@ -93,6 +94,24 @@ function baseCreateRenderer(options: RendererOptions) {
     }
   }
 
+  const mountChildren = (children, container, anchor) => {
+    if (isString(children)) {
+      children = children.split('')
+    }
+    for (let i = 0; i < children.length; i++) {
+      const child = (children[i] = normalizeVNode(children[i]))
+      patch(null, child, container, anchor)
+    }
+  }
+
+  const processFragment = (oldVNode, newVNode, container, anchor) => {
+    if (oldVNode == null) {
+      mountChildren(newVNode.children, container, anchor)
+    } else {
+      patchChildren(oldVNode, newVNode, container, anchor)
+    }
+  }
+
   const processComment = (oldVNode, newVNode, container, anchor) => {
     if (oldVNode == null) {
       newVNode.el = hostCreateComment(newVNode.children)
@@ -164,6 +183,7 @@ function baseCreateRenderer(options: RendererOptions) {
         processComment(oldVNode, newVNode, container, anchor)
         break
       case Fragment:
+        processFragment(oldVNode, newVNode, container, anchor)
         break
       default:
         if (shapeFlag & ShapeFlags.ELEMENT) {
