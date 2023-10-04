@@ -1,0 +1,33 @@
+export function patchEvent(el: Element & {_vei: object}, rawName: string, prevValue: any, nextValue: any) {
+  const invokers = el._vei || (el._vei = {})
+  const existingInvoker = invokers[rawName]
+
+  if (nextValue && existingInvoker) {
+    // 更新
+    existingInvoker.value = nextValue
+  } else {
+    const name = parseName(rawName)
+    if (nextValue) {
+      // 新增
+      const invoker = (invokers[rawName] = createInvoker(nextValue))
+      el.addEventListener(name, invoker)
+    } else if (existingInvoker) {
+      el.removeEventListener(name, existingInvoker)
+      invokers[rawName] = undefined
+    }
+  }
+}
+
+function parseName(name: string) {
+  return name.slice(2).toLowerCase()
+}
+
+function createInvoker(initialValue) {
+  const invoker = (e: Event) => {
+    invoker.value && invoker.value()
+  }
+
+  invoker.value = initialValue
+
+  return invoker
+}
