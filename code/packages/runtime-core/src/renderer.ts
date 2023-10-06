@@ -1,8 +1,10 @@
-import { Comment, Fragment, Text } from '@vue/runtime-core'
+import { Comment, Fragment, Text, queuePreFlushCb } from '@vue/runtime-core'
 import { EMPTY_OBJ, isString } from '@vue/shared'
 import { ShapeFlags } from 'packages/shared/src/shapeFlags'
 import { VNode, createVNode, isSameVNodeType } from './vnode'
-import { normalizeVNode } from './componentRenderUtils'
+import { normalizeVNode, renderComponentRoot } from './componentRenderUtils'
+import { createComponentInstance, setupComponent } from './component'
+import { ReactiveEffect } from 'packages/reactivity/src/effect'
 
 export interface RendererOptions {
   setElementText: (el: Element, text: string) => void
@@ -133,7 +135,7 @@ function baseCreateRenderer(options: RendererOptions) {
         hostSetText(el, newVNode.children)
       }
     }
-  } 
+  }
 
   const processElement = (oldVNode, newVNode, container, anchor) => {
     if (oldVNode == null) {
@@ -143,6 +145,45 @@ function baseCreateRenderer(options: RendererOptions) {
       // 更新操作
       patchElement(newVNode, oldVNode)
     }
+  }
+
+  const processComponent = (oldVNode, newVNode, container, anchor) => {
+    if (oldVNode == null) {
+      mountComponent(newVNode, container, anchor)
+    } else {
+    }
+  }
+
+  const setupRenderEffect = (instance, initialVNode, container, anchor) => {
+    const componentUpdateFn = () => {
+      if (!instance.isMounted) {
+        const subTree = (instance.subTree = renderComponentRoot(instance))
+
+        patch(null, subTree, container, anchor)
+
+        initialVNode.el = subTree.el
+      } else {
+      }
+    }
+
+    const effect = (instance.effect = new ReactiveEffect(
+      componentUpdateFn,
+      () => queuePreFlushCb(update)
+    ))
+
+    const update = (instance.update = () => effect.run())
+
+    update()
+  }
+
+  const mountComponent = (initialVNode, container, anchor) => {
+    initialVNode.component = createComponentInstance(initialVNode)
+    const instance = initialVNode.component
+
+    // 给 instance 增加 render
+    setupComponent(instance)
+    // 设置组件渲染
+    setupRenderEffect(instance, initialVNode, container, anchor)
   }
 
   const mountElement = (vnode, container, anchor) => {
@@ -187,15 +228,16 @@ function baseCreateRenderer(options: RendererOptions) {
         break
       default:
         if (shapeFlag & ShapeFlags.ELEMENT) {
-          // TODO Element
+          // Element
           processElement(oldVNode, newVNode, container, anchor)
         } else if (shapeFlag & ShapeFlags.COMPONENT) {
-          // TODO Component
+          // Component
+          processComponent(oldVNode, newVNode, container, anchor)
         }
     }
   }
 
-  const unmount = (vnode) => {
+  const unmount = vnode => {
     hostRemove(vnode.el)
   }
 
