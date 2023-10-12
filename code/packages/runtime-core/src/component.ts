@@ -52,7 +52,7 @@ function applyOptions(instance) {
   } = instance.type
 
   if (beforeCreate) {
-    callHook(beforeCreate)
+    callHook(beforeCreate, instance.data)
   }
 
   if (dataOptions) {
@@ -64,19 +64,19 @@ function applyOptions(instance) {
   }
 
   if (created) {
-    callHook(created)
+    callHook(created, instance.data)
+  }
+
+  function registerLifecycleHooks(register, hook) {
+    register(hook?.bind(instance.data), instance)
   }
 
   registerLifecycleHooks(onBeforeMount, beforeMount)
   registerLifecycleHooks(onMounted, mounted)
-
-  function registerLifecycleHooks(register, hook) {
-    register(hook, instance)
-  }
 }
 
-function callHook(hook: Function) {
-  hook()
+function callHook(hook: Function, proxy) {
+  hook.bind(proxy)()
 }
 
 export const enum LifecycleHooks {
