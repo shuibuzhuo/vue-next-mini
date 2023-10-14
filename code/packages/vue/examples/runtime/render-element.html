@@ -8,19 +8,22 @@
   </head>
   <body>
     <div id="app"></div>
-    
+
     <script>
       const { h, render } = Vue
 
-      console.log('render', render);
+      console.log('render', render)
 
       const vnode = h(
         'div',
         {
-          class: 'test'
+          class: 'test',
+          key: 100
         },
         'hello render'
       )
+
+      console.log('vnode', vnode)
 
       render(vnode, document.querySelector('#app'))
     </script>
