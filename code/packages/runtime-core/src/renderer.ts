@@ -60,7 +60,7 @@ function baseCreateRenderer(options: RendererOptions) {
     } else {
       if (prevShapeFlag & ShapeFlags.ARRAY_CHILDREN) {
         if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
-          // TODO: diff
+          patchKeyedChildren(c1, c2, container, anchor)
         } else {
           // TODO: 卸载
         }
@@ -73,6 +73,30 @@ function baseCreateRenderer(options: RendererOptions) {
           // TODO 单独挂载新子节点操作
         }
       }
+    }
+  }
+
+  const patchKeyedChildren = (
+    oldChildren,
+    newChildren,
+    container,
+    parentAnchor
+  ) => {
+    let i = 0
+    const newChildrenLength = newChildren.length
+    const oldChildrenEnd = oldChildren.length - 1
+    const newChildrenEnd = newChildrenLength - 1
+
+    while (i <= oldChildrenEnd && i <= newChildrenEnd) {
+      const oldVNode = oldChildren[i]
+      const newVNode = normalizeVNode(newChildren[i])
+
+      if (isSameVNodeType(oldVNode, newVNode)) {
+        patch(oldVNode, newVNode, container, null)
+      } else {
+        break
+      }
+      i++
     }
   }
 
@@ -219,6 +243,7 @@ function baseCreateRenderer(options: RendererOptions) {
     if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
       hostSetElementText(el, vnode.children)
     } else if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
+      mountChildren(vnode.children, el, anchor)
     }
 
     if (props) {
