@@ -87,6 +87,7 @@ function baseCreateRenderer(options: RendererOptions) {
     const oldChildrenEnd = oldChildren.length - 1
     const newChildrenEnd = newChildrenLength - 1
 
+    // 1. 自前向后比对
     while (i <= oldChildrenEnd && i <= newChildrenEnd) {
       const oldVNode = oldChildren[i]
       const newVNode = normalizeVNode(newChildren[i])
