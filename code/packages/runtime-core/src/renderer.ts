@@ -84,8 +84,8 @@ function baseCreateRenderer(options: RendererOptions) {
   ) => {
     let i = 0
     const newChildrenLength = newChildren.length
-    const oldChildrenEnd = oldChildren.length - 1
-    const newChildrenEnd = newChildrenLength - 1
+    let oldChildrenEnd = oldChildren.length - 1
+    let newChildrenEnd = newChildrenLength - 1
 
     // 1. 自前向后比对
     while (i <= oldChildrenEnd && i <= newChildrenEnd) {
@@ -99,6 +99,20 @@ function baseCreateRenderer(options: RendererOptions) {
       }
       i++
     }
+
+    // // 2. 自后向前比对
+    // while (i <= oldChildrenEnd && i <= newChildrenEnd) {
+    //   const oldVNode = oldChildren[oldChildrenEnd]
+    //   const newVNode = newChildren[newChildrenEnd]
+
+    //   if (isSameVNodeType(oldVNode, newVNode)) {
+    //     patch(oldVNode, newVNode, container, null)
+    //   } else {
+    //     break
+    //   }
+    //   oldChildrenEnd--
+    //   newChildrenEnd--
+    // }
   }
 
   const patchProps = (el, vnode, oldProps, newProps) => {
