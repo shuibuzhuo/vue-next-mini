@@ -10,20 +10,19 @@
     <div id="app"></div>
 
     <script>
-      const { h, render } = Vue
+      const { h, render, reactive } = Vue
 
-      console.log('render', render)
+      const component = {
+        setup() {
+          const obj = reactive({
+            name: 'shuibuzhuo'
+          })
 
-      const vnode = h(
-        'div',
-        {
-          class: 'test',
-          key: 100
-        },
-        'hello render'
-      )
+          return () => h('div', obj.name)
+        }
+      }
 
-      console.log('vnode', vnode)
+      const vnode = h(component)
 
       render(vnode, document.querySelector('#app'))
     </script>

@@ -43,7 +43,8 @@ function createBaseVNode(type, props, children, shapeFlag): VNode {
     type,
     props,
     children,
-    shapeFlag
+    shapeFlag,
+    key: props?.key || null
   } as VNode
 
   normalizeChildren(vnode, children)
