@@ -1,3 +1,5 @@
+import { CREATE_ELEMENT_VNODE } from './runtimeHelpers'
+
 export const enum NodeTypes {
   ROOT,
   ELEMENT,
@@ -38,4 +40,25 @@ export const enum ElementTypes {
   COMPONENT,
   SLOT,
   TEMPLATE
+}
+
+export function createVNodeCall(context, tag, props?, children?) {
+  if (context) {
+    context.helper(CREATE_ELEMENT_VNODE)
+  }
+
+  return {
+    type: NodeTypes.VNODE_CALL,
+    tag,
+    props,
+    children
+  }
+}
+
+export function createCompoundExpression(children, loc) {
+  return {
+    type: NodeTypes.COMPOUND_EXPRESSION,
+    loc,
+    children
+  }
 }
