@@ -10,11 +10,14 @@ export function baseCompile(template: string, options = {}) {
 
   console.log('baseParse ast', ast)
 
-  // transform(
-  //   ast,
-  //   extend(options, {
-  //     nodeTransforms: [transformElement, transformText]
-  //   })
-  // )
-  // return generate(ast)
+  transform(
+    ast,
+    extend(options, {
+      nodeTransforms: [transformElement, transformText]
+    })
+  )
+
+  console.log('ast', ast)
+
+  return generate(ast)
 }

@@ -39,7 +39,7 @@ function parseChildren(context: ParserContext, ancestors) {
   while (!isEnd(context, ancestors)) {
     const s = context.source
     let node
-    console.log('s', s)
+
     if (startsWith(s, '{{')) {
       node = parseInterpolation(context)
     } else if (s[0] === '<') {
