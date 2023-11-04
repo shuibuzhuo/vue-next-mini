@@ -19,6 +19,8 @@ export const isVNode = (value: any): value is VNode => {
   return value ? value.__v_isVNode === true : false
 }
 
+export { createVNode as createElementVNode }
+
 export function createVNode(type, props, children): VNode {
   const shapeFlag = isString(type)
     ? ShapeFlags.ELEMENT
