@@ -8,15 +8,13 @@ import { generate } from './codegen'
 export function baseCompile(template: string, options = {}) {
   const ast = baseParse(template)
 
-  transform(
-    ast,
-    extend(options, {
-      nodeTransforms: [transformElement, transformText]
-    })
-  )
+  console.log('baseParse ast', ast)
 
-  console.log('baseCompile ast', ast)
-  console.log('baseCompile JSON.stringify(ast)', JSON.stringify(ast))
-
-  return generate(ast)
+  // transform(
+  //   ast,
+  //   extend(options, {
+  //     nodeTransforms: [transformElement, transformText]
+  //   })
+  // )
+  // return generate(ast)
 }
